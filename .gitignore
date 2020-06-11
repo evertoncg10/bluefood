@@ -1,5 +1,7 @@
-/bin/
+/bin/*
 *.class
+*.jar
+*.war
 HELP.md
 .gradle
 build/

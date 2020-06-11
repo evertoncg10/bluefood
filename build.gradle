@@ -19,6 +19,13 @@ repositories {
 }
 
 dependencies {
+	/* a partir da versão 2.3.0 do Spring Boot o Bean Validation 
+	 * não é mais adicionado automaticamente ao utilizar o modulo starter-web
+	 * Necessário adicionar manualmente.
+	 * https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.3-Release-Notes#validation-starter-no-longer-included-in-web-starters
+	*/
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	//implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
