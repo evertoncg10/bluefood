@@ -22,7 +22,7 @@ public class PublicController {
 	public String newCliente(Model model) {
 
 		model.addAttribute("cliente", new Cliente());
-
+		ControllerHelper.setEditMode(model, false);
 		return "cliente-cadastro";
 	}
 
