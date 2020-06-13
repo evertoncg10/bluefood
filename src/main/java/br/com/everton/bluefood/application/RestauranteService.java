@@ -2,7 +2,10 @@ package br.com.everton.bluefood.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import br.com.everton.bluefood.domain.cliente.Cliente;
+import br.com.everton.bluefood.domain.cliente.ClienteRepository;
 import br.com.everton.bluefood.domain.restaurante.Restaurante;
 import br.com.everton.bluefood.domain.restaurante.RestauranteRepository;
 
@@ -13,8 +16,12 @@ public class RestauranteService {
     private RestauranteRepository restauranteRepository;
 
     @Autowired
+    private ClienteRepository clienteRepository;
+
+    @Autowired
     private ImageService imageService;
 
+    @Transactional
     public void saveRestaurante(Restaurante restaurante) throws ValidationException {
 
         if (!validateEmail(restaurante.getEmail(), restaurante.getId())) {
@@ -37,6 +44,12 @@ public class RestauranteService {
     }
 
     private boolean validateEmail(String email, Integer id) {
+
+        Cliente cliente = clienteRepository.findByEmail(email);
+
+        if (cliente != null) {
+            return false;
+        }
 
         Restaurante restaurante = restauranteRepository.findByEmail(email);
 

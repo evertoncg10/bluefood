@@ -2,47 +2,60 @@ package br.com.everton.bluefood.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.everton.bluefood.domain.cliente.Cliente;
 import br.com.everton.bluefood.domain.cliente.ClienteRepository;
+import br.com.everton.bluefood.domain.restaurante.Restaurante;
+import br.com.everton.bluefood.domain.restaurante.RestauranteRepository;
 
 @Service
 public class ClienteService {
 
-	@Autowired
-	private ClienteRepository clienteRepository;
+    @Autowired
+    private ClienteRepository clienteRepository;
 
-	public void saveCliente(Cliente cliente) throws ValidationException {
+    @Autowired
+    private RestauranteRepository restauranteRepository;
 
-		if (!validateEmail(cliente.getEmail(), cliente.getId())) {
-			throw new ValidationException("O E-mail está duplicado");
-		}
+    @Transactional
+    public void saveCliente(Cliente cliente) throws ValidationException {
 
-		if (cliente.getId() != null) {
+        if (!validateEmail(cliente.getEmail(), cliente.getId())) {
+            throw new ValidationException("O E-mail está duplicado");
+        }
 
-			Cliente clienteDB = clienteRepository.findById(cliente.getId()).orElseThrow();
-			cliente.setSenha(clienteDB.getSenha());
+        if (cliente.getId() != null) {
 
-		} else {
-			cliente.encryptPassword();
-		}
+            Cliente clienteDB = clienteRepository.findById(cliente.getId()).orElseThrow();
+            cliente.setSenha(clienteDB.getSenha());
 
-		clienteRepository.save(cliente);
-	}
+        } else {
+            cliente.encryptPassword();
+        }
 
-	private boolean validateEmail(String email, Integer id) {
+        clienteRepository.save(cliente);
+    }
 
-		Cliente cliente = clienteRepository.findByEmail(email);
+    private boolean validateEmail(String email, Integer id) {
 
-		if (cliente != null) {
-			if (id == null) {
-				return false;
-			}
+        Restaurante restaurante = restauranteRepository.findByEmail(email);
 
-			if (!cliente.getId().equals(id)) {
-				return false;
-			}
-		}
-		return true;
-	}
+        if (restaurante != null) {
+            return false;
+        }
+
+        Cliente cliente = clienteRepository.findByEmail(email);
+
+        if (cliente != null) {
+            if (id == null) {
+                return false;
+            }
+
+            if (!cliente.getId().equals(id)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

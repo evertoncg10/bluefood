@@ -22,65 +22,65 @@ import br.com.everton.bluefood.domain.restaurante.Restaurante;
 @RequestMapping(path = "/public")
 public class PublicController {
 
-	@Autowired
-	private ClienteService clienteService;
+    @Autowired
+    private ClienteService clienteService;
 
-	@Autowired
-	private RestauranteService restauranteService;
+    @Autowired
+    private RestauranteService restauranteService;
 
-	@Autowired
-	private CategoriaRestauranteRepository categoriaRestauranteRepository;
+    @Autowired
+    private CategoriaRestauranteRepository categoriaRestauranteRepository;
 
-	@GetMapping("/cliente/new")
-	public String newCliente(Model model) {
+    @GetMapping("/cliente/new")
+    public String newCliente(Model model) {
 
-		model.addAttribute("cliente", new Cliente());
-		ControllerHelper.setEditMode(model, false);
-		return "cliente-cadastro";
-	}
+        model.addAttribute("cliente", new Cliente());
+        ControllerHelper.setEditMode(model, false);
+        return "cliente-cadastro";
+    }
 
-	@PostMapping(path = "/cliente/save")
-	public String saveCliente(@ModelAttribute("cliente") @Valid Cliente cliente, Errors errors, Model model) {
+    @PostMapping(path = "/cliente/save")
+    public String saveCliente(@ModelAttribute("cliente") @Valid Cliente cliente, Errors errors, Model model) {
 
-		if (!errors.hasErrors()) {
-			try {
-				clienteService.saveCliente(cliente);
-				model.addAttribute("msg", "Cliente gravado com sucesso!");
-			} catch (ValidationException e) {
-				errors.rejectValue("email", null, e.getMessage());
-			}
-		}
+        if (!errors.hasErrors()) {
+            try {
+                clienteService.saveCliente(cliente);
+                model.addAttribute("msg", "Cliente gravado com sucesso!");
+            } catch (ValidationException e) {
+                errors.rejectValue("email", null, e.getMessage());
+            }
+        }
 
-		ControllerHelper.setEditMode(model, false);
+        ControllerHelper.setEditMode(model, false);
 
-		return "cliente-cadastro";
-	}
+        return "cliente-cadastro";
+    }
 
-	@GetMapping("/restaurante/new")
-	public String newRestaurante(Model model) {
+    @GetMapping("/restaurante/new")
+    public String newRestaurante(Model model) {
 
-		model.addAttribute("restaurante", new Restaurante());
-		ControllerHelper.setEditMode(model, false);
-		ControllerHelper.addCategoriaToRequest(categoriaRestauranteRepository, model);
+        model.addAttribute("restaurante", new Restaurante());
+        ControllerHelper.setEditMode(model, false);
+        ControllerHelper.addCategoriaToRequest(categoriaRestauranteRepository, model);
 
-		return "restaurante-cadastro";
-	}
+        return "restaurante-cadastro";
+    }
 
-	@PostMapping(path = "/restaurante/save")
-	public String saveRestaurante(@ModelAttribute("restaurante") @Valid Restaurante restaurante, Errors errors,
-			Model model) {
+    @PostMapping(path = "/restaurante/save")
+    public String saveRestaurante(@ModelAttribute("restaurante") @Valid Restaurante restaurante, Errors errors, Model model) {
 
-		if (!errors.hasErrors()) {
-			try {
-				restauranteService.saveRestaurante(restaurante);
-				model.addAttribute("msg", "Restaurante gravado com sucesso!");
-			} catch (ValidationException e) {
-				errors.rejectValue("email", null, e.getMessage());
-			}
-		}
+        if (!errors.hasErrors()) {
+            try {
+                restauranteService.saveRestaurante(restaurante);
+                model.addAttribute("msg", "Restaurante gravado com sucesso!");
+            } catch (ValidationException e) {
+                errors.rejectValue("email", null, e.getMessage());
+            }
+        }
 
-		ControllerHelper.setEditMode(model, false);
+        ControllerHelper.setEditMode(model, false);
+        ControllerHelper.addCategoriaToRequest(categoriaRestauranteRepository, model);
 
-		return "restaurante-cadastro";
-	}
+        return "restaurante-cadastro";
+    }
 }
