@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import br.com.everton.bluefood.application.ClienteService;
 import br.com.everton.bluefood.application.ValidationException;
 import br.com.everton.bluefood.domain.cliente.Cliente;
+import br.com.everton.bluefood.domain.restaurante.CategoriaRestauranteRepository;
 import br.com.everton.bluefood.domain.restaurante.Restaurante;
 
 @Controller
@@ -22,6 +23,9 @@ public class PublicController {
 
 	@Autowired
 	private ClienteService clienteService;
+
+	@Autowired
+	private CategoriaRestauranteRepository categoriaRestauranteRepository;
 
 	@GetMapping("/cliente/new")
 	public String newCliente(Model model) {
@@ -53,6 +57,8 @@ public class PublicController {
 
 		model.addAttribute("restaurante", new Restaurante());
 		ControllerHelper.setEditMode(model, false);
+		ControllerHelper.addCategoriaToRequest(categoriaRestauranteRepository, model);
+
 		return "restaurante-cadastro";
 	}
 }

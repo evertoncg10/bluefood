@@ -21,6 +21,7 @@ import br.com.everton.bluefood.domain.usuario.Usuario;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @SuppressWarnings("serial")
 @Getter
@@ -50,6 +51,8 @@ public class Restaurante extends Usuario {
 
 	@ManyToMany
 	@JoinTable(name = "restaurante_has_categoria", joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "categoria_restaurante_id"))
+	@Size(min = 1, message = "O restaurante precisa ter pelo menos uma categoria")
+	@ToString.Exclude
 	private Set<CategoriaRestaurante> categorias = new HashSet<>(0);
 
 }
