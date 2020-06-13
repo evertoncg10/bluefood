@@ -1,10 +1,12 @@
 package br.com.everton.bluefood.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.com.everton.bluefood.domain.restaurante.Restaurante;
 import br.com.everton.bluefood.domain.restaurante.RestauranteRepository;
 
+@Service
 public class RestauranteService {
 
 	@Autowired
@@ -16,7 +18,18 @@ public class RestauranteService {
 			throw new ValidationException("O E-mail está duplicado");
 		}
 
-		restauranteRepository.save(restaurante);
+		if (restaurante.getId() != null) {
+
+			Restaurante restauranteDB = restauranteRepository.findById(restaurante.getId()).orElseThrow();
+			restaurante.setSenha(restauranteDB.getSenha());
+
+		} else {
+			restaurante.encryptPassword();
+			restaurante = restauranteRepository.save(restaurante);
+			restaurante.setLogotipoFileName();
+			// TODO: Upload!
+		}
+
 	}
 
 	private boolean validateEmail(String email, Integer id) {
