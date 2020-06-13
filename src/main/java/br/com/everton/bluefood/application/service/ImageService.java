@@ -1,4 +1,4 @@
-package br.com.everton.bluefood.application;
+package br.com.everton.bluefood.application.service;
 
 import java.io.IOException;
 

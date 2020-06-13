@@ -1,4 +1,4 @@
-package br.com.everton.bluefood.application;
+package br.com.everton.bluefood.application.service;
 
 @SuppressWarnings("serial")
 public class ApplicationServiceException extends RuntimeException {
