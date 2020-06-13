@@ -20,6 +20,7 @@ import javax.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.everton.bluefood.domain.usuario.Usuario;
+import br.com.everton.bluefood.util.FileType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,39 +34,38 @@ import lombok.ToString;
 @Table(name = "restaurante")
 public class Restaurante extends Usuario {
 
-	@NotBlank(message = "O CNPJ não pode ser vazio")
-	@Pattern(regexp = "[0-9]{14}", message = "O CNPJ possui formato inválido")
-	@Column(length = 14, nullable = false)
-	private String cnpj;
+    @NotBlank(message = "O CNPJ não pode ser vazio")
+    @Pattern(regexp = "[0-9]{14}", message = "O CNPJ possui formato inválido")
+    @Column(length = 14, nullable = false)
+    private String cnpj;
 
-	@Size(max = 80)
-	private String logotipo;
+    @Size(max = 80)
+    private String logotipo;
 
-	private transient MultipartFile logotipoFile;
+    private transient MultipartFile logotipoFile;
 
-	@NotNull(message = "A taxa de entrega não pode ser vazia")
-	@Min(0)
-	@Max(99)
-	private BigDecimal taxaEntrega;
+    @NotNull(message = "A taxa de entrega não pode ser vazia")
+    @Min(0)
+    @Max(99)
+    private BigDecimal taxaEntrega;
 
-	@NotNull(message = "A tempo de entrega não pode ser vazio")
-	@Min(0)
-	@Max(120)
-	private Integer tempoEntregaBase;
+    @NotNull(message = "A tempo de entrega não pode ser vazio")
+    @Min(0)
+    @Max(120)
+    private Integer tempoEntregaBase;
 
-	@ManyToMany
-	@JoinTable(name = "restaurante_has_categoria", joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "categoria_restaurante_id"))
-	@Size(min = 1, message = "O restaurante precisa ter pelo menos uma categoria")
-	@ToString.Exclude
-	private Set<CategoriaRestaurante> categorias = new HashSet<>(0);
+    @ManyToMany
+    @JoinTable(name = "restaurante_has_categoria", joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "categoria_restaurante_id"))
+    @Size(min = 1, message = "O restaurante precisa ter pelo menos uma categoria")
+    @ToString.Exclude
+    private Set<CategoriaRestaurante> categorias = new HashSet<>(0);
 
-	public void setLogotipoFileName() {
-		if (getId() == null) {
-			throw new IllegalStateException("É preciso primeiro gravar o registro");
-		}
+    public void setLogotipoFileName() {
+        if (getId() == null) {
+            throw new IllegalStateException("É preciso primeiro gravar o registro");
+        }
 
-		// TODO: Trocar forma de ler a extensão
-		this.logotipo = String.format("%04d-logo.%s", getId(), ".png");
-	}
+        this.logotipo = String.format("%04d-logo.%s", getId(), FileType.of(logotipoFile.getContentType()).getExtension());
+    }
 
 }

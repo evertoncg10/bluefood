@@ -9,43 +9,47 @@ import br.com.everton.bluefood.domain.restaurante.RestauranteRepository;
 @Service
 public class RestauranteService {
 
-	@Autowired
-	private RestauranteRepository restauranteRepository;
+    @Autowired
+    private RestauranteRepository restauranteRepository;
 
-	public void saveRestaurante(Restaurante restaurante) throws ValidationException {
+    @Autowired
+    private ImageService imageService;
 
-		if (!validateEmail(restaurante.getEmail(), restaurante.getId())) {
-			throw new ValidationException("O E-mail está duplicado");
-		}
+    public void saveRestaurante(Restaurante restaurante) throws ValidationException {
 
-		if (restaurante.getId() != null) {
+        if (!validateEmail(restaurante.getEmail(), restaurante.getId())) {
+            throw new ValidationException("O E-mail está duplicado");
+        }
 
-			Restaurante restauranteDB = restauranteRepository.findById(restaurante.getId()).orElseThrow();
-			restaurante.setSenha(restauranteDB.getSenha());
+        if (restaurante.getId() != null) {
 
-		} else {
-			restaurante.encryptPassword();
-			restaurante = restauranteRepository.save(restaurante);
-			restaurante.setLogotipoFileName();
-			// TODO: Upload!
-		}
+            Restaurante restauranteDB = restauranteRepository.findById(restaurante.getId()).orElseThrow();
+            restaurante.setSenha(restauranteDB.getSenha());
 
-	}
+        } else {
+            restaurante.encryptPassword();
+            restaurante = restauranteRepository.save(restaurante);
+            restaurante.setLogotipoFileName();
 
-	private boolean validateEmail(String email, Integer id) {
+            imageService.uploadLogotipo(restaurante.getLogotipoFile(), restaurante.getLogotipo());
+        }
 
-		Restaurante restaurante = restauranteRepository.findByEmail(email);
+    }
 
-		if (restaurante != null) {
-			if (id == null) {
-				return false;
-			}
+    private boolean validateEmail(String email, Integer id) {
 
-			if (!restaurante.getId().equals(id)) {
-				return false;
-			}
-		}
-		return true;
-	}
+        Restaurante restaurante = restauranteRepository.findByEmail(email);
+
+        if (restaurante != null) {
+            if (id == null) {
+                return false;
+            }
+
+            if (!restaurante.getId().equals(id)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }
