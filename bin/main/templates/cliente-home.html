@@ -8,9 +8,9 @@
 		
 			<div>
 				<h1>É hora de rangar!</h1>
-				<form method="post" action="clienteBusca.html">
+				<form method="get" th:object="${searchFilter}" th:action="@{/cliente/search}">
 					<fieldset>
-						<input type="text" name="email" placeholder="Buscar por...">
+						<input type="text" th:field="*{texto}" placeholder="Buscar por...">
 						<input type="submit" value="Procurar">
 					</fieldset>
 				</form>
@@ -22,7 +22,7 @@
 				<div id="divCategoriasComidaOpcao" th:each="categoria : ${categorias}">
 					<a href="#">
 					<img th:src="@{/images/categoria/} + ${categoria.imagem}" id="imgCategoriaComida"><br />
-					<span th:text="${categoria.nome}">Churrasco</span>
+					<span th:text="${categoria.nome}"></span>
 					</a>
 				</div>
 				

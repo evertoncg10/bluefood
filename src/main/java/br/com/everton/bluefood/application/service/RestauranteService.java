@@ -1,5 +1,7 @@
 package br.com.everton.bluefood.application.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +10,7 @@ import br.com.everton.bluefood.domain.cliente.Cliente;
 import br.com.everton.bluefood.domain.cliente.ClienteRepository;
 import br.com.everton.bluefood.domain.restaurante.Restaurante;
 import br.com.everton.bluefood.domain.restaurante.RestauranteRepository;
+import br.com.everton.bluefood.domain.restaurante.SearchFilter;
 
 @Service
 public class RestauranteService {
@@ -63,6 +66,11 @@ public class RestauranteService {
             }
         }
         return true;
+    }
+
+    public List<Restaurante> search(SearchFilter filter) {
+        //TODO: Considerar critérios de filtragem
+        return restauranteRepository.findAll();
     }
 
 }
