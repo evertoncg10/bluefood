@@ -79,7 +79,7 @@ public class RestauranteService {
             restaurantes = restauranteRepository.findByCategorias_Id(filter.getCategoriaId());
 
         } else {
-            throw new IllegalStateException("O tipo de busca " + filter.getSearchType() + "não é suportado");
+            throw new IllegalStateException("O tipo de busca " + filter.getSearchType() + " não é suportado");
         }
 
         return restaurantes;
