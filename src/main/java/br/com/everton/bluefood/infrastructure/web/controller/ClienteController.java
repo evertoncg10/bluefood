@@ -23,6 +23,7 @@ import br.com.everton.bluefood.domain.cliente.ClienteRepository;
 import br.com.everton.bluefood.domain.restaurante.CategoriaRestaurante;
 import br.com.everton.bluefood.domain.restaurante.CategoriaRestauranteRepository;
 import br.com.everton.bluefood.domain.restaurante.Restaurante;
+import br.com.everton.bluefood.domain.restaurante.RestauranteRepository;
 import br.com.everton.bluefood.domain.restaurante.SearchFilter;
 import br.com.everton.bluefood.util.SecurityUtils;
 
@@ -32,6 +33,9 @@ public class ClienteController {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private RestauranteRepository restauranteRepository;
 
     @Autowired
     private CategoriaRestauranteRepository categoriaRestauranteRepository;
@@ -91,8 +95,17 @@ public class ClienteController {
         ControllerHelper.addCategoriaToRequest(categoriaRestauranteRepository, model);
 
         model.addAttribute("searchFilter", filter);
+        model.addAttribute("cep", SecurityUtils.loggedCliente().getCep());
 
         return "cliente-busca";
+    }
+
+    @GetMapping(path = "/restaurante")
+    public String viewRestaurante(@RequestParam("restauranteId") Integer restauranteId, Model model) {
+        Restaurante restaurante = restauranteRepository.findById(restauranteId).orElseThrow();
+        model.addAttribute("restaurante", restaurante);
+        model.addAttribute("cep", SecurityUtils.loggedCliente().getCep());
+        return "cliente-restaurante";
     }
 
 }
