@@ -89,7 +89,8 @@ public class ClienteController {
     }
 
     @GetMapping(path = "/search")
-    public String search(@ModelAttribute("searchFilter") SearchFilter filter, @RequestParam(value = "cmd", required = false) String command,
+    public String search(@ModelAttribute("searchFilter") SearchFilter filter, //
+                         @RequestParam(value = "cmd", required = false) String command, //
                          Model model) {
 
         filter.processFilter(command);
@@ -106,7 +107,9 @@ public class ClienteController {
     }
 
     @GetMapping(path = "/restaurante")
-    public String viewRestaurante(@RequestParam("restauranteId") Integer restauranteId, Model model) {
+    public String viewRestaurante(@RequestParam("restauranteId") Integer restauranteId, // 
+                                  @RequestParam(value = "categoria", required = false) String categoria, // 
+                                  Model model) {
         Restaurante restaurante = restauranteRepository.findById(restauranteId).orElseThrow();
         model.addAttribute("restaurante", restaurante);
         model.addAttribute("cep", SecurityUtils.loggedCliente().getCep());
@@ -117,10 +120,19 @@ public class ClienteController {
         List<ItemCardapio> itensCardapioDestaque;
         List<ItemCardapio> itensCardapioNaoDestaque;
 
-        itensCardapioDestaque = itemCardapioRepository.findByRestaurante_IdAndDestaqueOrderByNome(restauranteId, true);
-        itensCardapioNaoDestaque = itemCardapioRepository.findByRestaurante_IdAndDestaqueOrderByNome(restauranteId, false);
+        if (categoria == null) {
+            itensCardapioDestaque = itemCardapioRepository.findByRestaurante_IdAndDestaqueOrderByNome(restauranteId, true);
+            itensCardapioNaoDestaque = itemCardapioRepository.findByRestaurante_IdAndDestaqueOrderByNome(restauranteId, false);
+
+        } else {
+            itensCardapioDestaque = itemCardapioRepository.findByRestaurante_IdAndDestaqueAndCategoriaOrderByNome(restauranteId, true, categoria);
+            itensCardapioNaoDestaque = itemCardapioRepository.findByRestaurante_IdAndDestaqueAndCategoriaOrderByNome(restauranteId, false, categoria);
+        }
+
         model.addAttribute("itensCardapioDestaque", itensCardapioDestaque);
         model.addAttribute("itensCardapioNaoDestaque", itensCardapioNaoDestaque);
+
+        model.addAttribute("categoriaSelecionada", categoria);
 
         return "cliente-restaurante";
     }
