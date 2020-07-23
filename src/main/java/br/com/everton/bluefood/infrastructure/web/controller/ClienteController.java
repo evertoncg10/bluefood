@@ -22,6 +22,8 @@ import br.com.everton.bluefood.domain.cliente.Cliente;
 import br.com.everton.bluefood.domain.cliente.ClienteRepository;
 import br.com.everton.bluefood.domain.restaurante.CategoriaRestaurante;
 import br.com.everton.bluefood.domain.restaurante.CategoriaRestauranteRepository;
+import br.com.everton.bluefood.domain.restaurante.ItemCardapio;
+import br.com.everton.bluefood.domain.restaurante.ItemCardapioRepository;
 import br.com.everton.bluefood.domain.restaurante.Restaurante;
 import br.com.everton.bluefood.domain.restaurante.RestauranteRepository;
 import br.com.everton.bluefood.domain.restaurante.SearchFilter;
@@ -36,6 +38,9 @@ public class ClienteController {
 
     @Autowired
     private RestauranteRepository restauranteRepository;
+
+    @Autowired
+    private ItemCardapioRepository itemCardapioRepository;
 
     @Autowired
     private CategoriaRestauranteRepository categoriaRestauranteRepository;
@@ -105,6 +110,18 @@ public class ClienteController {
         Restaurante restaurante = restauranteRepository.findById(restauranteId).orElseThrow();
         model.addAttribute("restaurante", restaurante);
         model.addAttribute("cep", SecurityUtils.loggedCliente().getCep());
+
+        List<String> categorias = itemCardapioRepository.findCategorias(restauranteId);
+        model.addAttribute("categorias", categorias);
+
+        List<ItemCardapio> itensCardapioDestaque;
+        List<ItemCardapio> itensCardapioNaoDestaque;
+
+        itensCardapioDestaque = itemCardapioRepository.findByRestaurante_IdAndDestaqueOrderByNome(restauranteId, true);
+        itensCardapioNaoDestaque = itemCardapioRepository.findByRestaurante_IdAndDestaqueOrderByNome(restauranteId, false);
+        model.addAttribute("itensCardapioDestaque", itensCardapioDestaque);
+        model.addAttribute("itensCardapioNaoDestaque", itensCardapioNaoDestaque);
+
         return "cliente-restaurante";
     }
 

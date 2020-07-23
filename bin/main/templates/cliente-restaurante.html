@@ -6,7 +6,7 @@
 	
 		<div layout:fragment="content">
 			<div>
-				<img th:src="@{/images/logotipo/} + ${restaurante.logotipo}" id="imgRestauranteBusca" width="250" height="250"><br><br>
+				<img th:src="@{/images/logotipo/} + ${restaurante.logotipo}" id="imgRestauranteBusca"><br><br>
 				<span id="restauranteOpcaoTitulo" th:text="${restaurante.nome}"></span><br>
 				<span id="restauranteOpcaoCategoria" th:text="${restaurante.categoriasAsText}"></span><br>
 				<span id="restauranteOpcaoTempo" th:text="'Tempo médio de entrega: ' + ${restaurante.calcularTempoEntrega(cep)} + ' minutos'"></span><br>
@@ -17,13 +17,9 @@
 				<h1>Opções</h1>
 				<fieldset id="fieldsetFiltros">
 					<legend>Filtros</legend>
-					<input type="button" value="Promoções" id="inputSelecionado">
-					<input type="button" value="Saladas"> 
-					<input type="button" value="Bebidas"> 
-					<input type="button" value="Pizzas"> 
-					<input type="button" value="Saladas"> 
-					<input type="button" value="Bebidas"> 
-					<input type="button" value="Pizzas"> 
+					<div th:each="categoria : ${categorias}" style="display: inline;">
+						<input type="button" th:value="${categoria}">					
+					</div>
 				</fieldset>
 				<br>
 			</div>
@@ -32,13 +28,14 @@
 				<h1>Destaques</h1>
 			</div>
 			
-			<div id="divCategoriasComidaGeral">
+			<div id="divCategoriasComidaGeral" th:each="item : ${itensCardapioDestaque}" style="margin-top: 20px;">
 				<div id="divRestaurantesOpcao">
-					<img src="images/sys_comidaPizzaCalabresa.png" id="imgRestauranteOpcao"><br>
-					<span id="restauranteOpcaoTitulo">Pizza de Calabresa</span><br>
-					<span>Massa fina, queijo, calabresa e pimenta.</span><br>
-					<span>R$ 45,00</span><br><br>
-					<form action="#">
+					<img th:src="@{/images/comida/} + ${item.imagem}" id="imgRestauranteOpcao"><br>
+					<span id="restauranteOpcaoTitulo" th:text="${item.nome}"></span><br>
+					<span th:text="${item.descricao}"></span><br>
+					<span th:text="${#numbers.formatCurrency(item.preco)}"></span><br><br>
+					<form action="get" th:action="@{/cliente/carrinho/adicionar}">
+						<input type="hidden" name="itemId" th:value="${item.id}" />
 						<label for="quantidade">Quantidade: </label>
 						<br>
 						<select name="quantidade" id="quantidade">
@@ -46,12 +43,18 @@
 							<option>2</option>
 							<option>3</option>
 							<option>4</option>
+							<option>5</option>
+							<option>6</option>
+							<option>7</option>
+							<option>8</option>
+							<option>9</option>
+							<option>10</option>
 						</select><br><br>
 						Observações:
 						<br>
-						<textarea></textarea>
+						<textarea name="observacoes"></textarea>
 						<br><br>
-						<input type="button" value="Adicionar ao carrinho" onClick="location.href='clienteCarrinho.html';">
+						<input type="submit" value="Adicionar ao carrinho">
 					</form>
 				</div>
 			</div>
@@ -61,13 +64,14 @@
 				<h1>Menu</h1>
 			</div>
 			
-			<div id="divCategoriasComidaGeral">
+			<div id="divCategoriasComidaGeral" th:each="item : ${itensCardapioNaoDestaque}" style="margin-top: 20px;">
 				<div id="divRestaurantesOpcao">
-					<img src="images/sys_comidaPizzaCalabresa.png" id="imgRestauranteOpcao"><br>
-					<span id="restauranteOpcaoTitulo">Pizza de Calabresa</span><br>
-					<span>Massa fina, queijo, calabresa e pimenta.</span><br>
-					<span>R$ 45,00</span><br><br>
-					<form action="#">
+					<img th:src="@{/images/comida/} + ${item.imagem}" id="imgRestauranteOpcao"><br>
+					<span id="restauranteOpcaoTitulo" th:text="${item.nome}"></span><br>
+					<span th:text="${item.descricao}"></span><br>
+					<span th:text="${#numbers.formatCurrency(item.preco)}"></span><br><br>
+					<form action="get" th:action="@{/cliente/carrinho/adicionar}">
+						<input type="hidden" name="itemId" th:value="${item.id}" />
 						<label for="quantidade">Quantidade: </label>
 						<br>
 						<select name="quantidade" id="quantidade">
@@ -75,43 +79,24 @@
 							<option>2</option>
 							<option>3</option>
 							<option>4</option>
+							<option>5</option>
+							<option>6</option>
+							<option>7</option>
+							<option>8</option>
+							<option>9</option>
+							<option>10</option>
 						</select><br><br>
 						Observações:
 						<br>
-						<textarea></textarea>
+						<textarea name="observacoes"></textarea>
 						<br><br>
-						<input type="button" value="Adicionar ao carrinho" onClick="location.href='clienteCarrinho.html';">
-					</form>
-				</div>
-			</div>
-			<br><br>
-			
-			<div id="divCategoriasComidaGeral">
-				<div id="divRestaurantesOpcao">
-					<img src="images/sys_comidaHamburguer.png" id="imgRestauranteOpcao"><br>
-					<span id="restauranteOpcaoTitulo">Hamburguer</span><br>
-					<span>Pão, hamburguer 200gr, queijo, tomate, alface e bacon.</span><br>
-					<span>R$ 30,00</span><br><br>
-					<form action="#">
-						<label for="quantidade">Quantidade: </label>
-						<br>
-						<select name="quantidade" id="quantidade">
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-						</select><br><br>
-						Observações:
-						<br>
-						<textarea></textarea>
-						<br><br>
-						<input type="button" value="Adicionar ao carrinho" onClick="location.href='clienteCarrinho.html';">
+						<input type="submit" value="Adicionar ao carrinho" />
 					</form>
 				</div>
 			</div>
 			<br><br>
 	
-			<input type="button" value="Voltar" onClick="location.href='clienteBusca.html';">
+			<input type="button" value="Voltar" th:onClick="'location.href=\'' + @{/cliente/home} + '\';'">
 
 		</div>
 	</body>
