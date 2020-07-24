@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import br.com.everton.bluefood.domain.pedido.Carrinho;
 import br.com.everton.bluefood.domain.pedido.RestauranteDiferenteException;
@@ -23,8 +24,7 @@ public class CarrinhoController {
     private ItemCardapioRepository itemCardapioRepository;
 
     @GetMapping(path = "/adicionar")
-    public String adicionarItem(
-                                @RequestParam("itemId") Integer itemId, //
+    public String adicionarItem(@RequestParam("itemId") Integer itemId, //
                                 @RequestParam("quantidade") Integer quantidade, //
                                 @RequestParam("observacoes") String observacoes, //
                                 @ModelAttribute("carrinho") Carrinho carrinho, //
@@ -35,6 +35,27 @@ public class CarrinhoController {
             carrinho.adicionarItem(itemCardapio, quantidade, observacoes);
         } catch (RestauranteDiferenteException e) {
             model.addAttribute("msg", "Não é possível inserir itens de restaurantes diferentes no carrinho.");
+        }
+
+        return "cliente-carrinho";
+    }
+
+    @GetMapping(path = "/visualizar")
+    public String viewCarrinho() {
+        return "cliente-carrinho";
+    }
+
+    @GetMapping(path = "/remover")
+    public String removerItem(@RequestParam("itemId") Integer itemId, //
+                              @ModelAttribute("carrinho") Carrinho carrinho, //
+                              SessionStatus sessionStatus, //
+                              Model model) {
+
+        ItemCardapio itemCardapio = itemCardapioRepository.findById(itemId).orElseThrow();
+        carrinho.removerItem(itemCardapio);
+
+        if (carrinho.vazio()) {
+            sessionStatus.setComplete();
         }
 
         return "cliente-carrinho";
