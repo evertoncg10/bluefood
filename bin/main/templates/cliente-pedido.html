@@ -7,7 +7,7 @@
 		<div layout:fragment="content">
 			<div>
 				<h1>SEU PEDIDO</h1>
-				<input type="button" value="Refazer pedido" onClick="location.href='clienteCarrinho.html';">
+				<input type="button" value="Refazer pedido" th:onclick="'location.href=\'' + @{/cliente/carrinho/refazerCarrinho} + '?pedidoId=' + ${pedido.id} + '\';'">
 			</div>
 			
 			
@@ -20,8 +20,6 @@
 			</div>
 			<br><br>
 			
-			
-	
 			<div th:each="item : ${pedido.itens}">
 				<span id="restauranteOpcaoTitulo" th:text="${item.itemCardapio.nome}"></span><br>
 				<span id="restauranteOpcaoTaxa" th:text="'QTD: ' + ${item.quantidade}"></span><br>
