@@ -20,6 +20,8 @@ import br.com.everton.bluefood.application.service.RestauranteService;
 import br.com.everton.bluefood.application.service.ValidationException;
 import br.com.everton.bluefood.domain.cliente.Cliente;
 import br.com.everton.bluefood.domain.cliente.ClienteRepository;
+import br.com.everton.bluefood.domain.pedido.Pedido;
+import br.com.everton.bluefood.domain.pedido.PedidoRepository;
 import br.com.everton.bluefood.domain.restaurante.CategoriaRestaurante;
 import br.com.everton.bluefood.domain.restaurante.CategoriaRestauranteRepository;
 import br.com.everton.bluefood.domain.restaurante.ItemCardapio;
@@ -51,12 +53,18 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    @Autowired
+    private PedidoRepository pedidoRepository;
+
     @GetMapping(path = "/home")
     public String home(Model model) {
 
         List<CategoriaRestaurante> categorias = categoriaRestauranteRepository.findAll(Sort.by("nome"));
         model.addAttribute("categorias", categorias);
         model.addAttribute("searchFilter", new SearchFilter());
+
+        List<Pedido> pedidos = pedidoRepository.listPedidosByCliente(SecurityUtils.loggedCliente().getId());
+        model.addAttribute("pedidos", pedidos);
 
         return "cliente-home";
     }
