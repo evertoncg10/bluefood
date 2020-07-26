@@ -16,4 +16,16 @@ public enum Status {
     int ordem;
     String descricao;
     boolean ultimo;
+
+    public int getOrdem() {
+        return ordem;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public boolean isUltimo() {
+        return ultimo;
+    }
 }
