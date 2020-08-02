@@ -45,6 +45,7 @@ public class Pagamento implements Serializable {
     private String numCartaoFinal;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
     private BandeiraCartao bandeiraCartao;
 
     public void definirNumeroEBandeira(String numCartao) {
