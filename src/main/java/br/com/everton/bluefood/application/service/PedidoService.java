@@ -13,7 +13,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.everton.bluefood.domain.pagamento.DadosCartao;
+import br.com.everton.bluefood.domain.pagamento.Pagamento;
 import br.com.everton.bluefood.domain.pagamento.PagamentoException;
+import br.com.everton.bluefood.domain.pagamento.PagamentoRepository;
 import br.com.everton.bluefood.domain.pagamento.StatusPagamento;
 import br.com.everton.bluefood.domain.pedido.Carrinho;
 import br.com.everton.bluefood.domain.pedido.ItemPedido;
@@ -32,6 +34,9 @@ public class PedidoService {
 
     @Autowired
     private ItemPedidoRepository itemPedidoRepository;
+
+    @Autowired
+    private PagamentoRepository pagamentoRepository;
 
     @Value("${bluefood.sbpay.url}")
     private String sbPayURL;
@@ -86,6 +91,13 @@ public class PedidoService {
 
            throw new PagamentoException(statusPagamento.getDescricao());
        }
+
+       Pagamento pagamento = new Pagamento();
+       pagamento.setData(LocalDateTime.now());
+       pagamento.setPedido(pedido);
+       pagamento.definirNumeroEBandeira(numCartao);
+
+       pagamentoRepository.save(pagamento);
 
         return pedido;
     }
