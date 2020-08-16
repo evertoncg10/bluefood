@@ -63,13 +63,14 @@
 							<span th:errors="*{tempoEntregaBase}"></span>
 						</div>
 						<br /><br />
-						
-						<label for="logotipo">Logotipo: </label><br>	
-						<input type="file" id="logotipo" name="logotipo" placeholder="Selecionar..." th:field="*{logotipoFile}" th:classappend="${#fields.hasErrors('logotipoFile')} ? 'inputError' : ''" />
-						<div id="mensagemDeErro" th:if="${#fields.hasErrors('logotipoFile')}">
-							<span th:errors="*{logotipoFile}"></span>
+						<div th:if="${!editMode}">
+							<label for="logotipo">Logotipo: </label><br>	
+							<input type="file" id="logotipo" name="logotipo" placeholder="Selecionar..." th:field="*{logotipoFile}" th:classappend="${#fields.hasErrors('logotipoFile')} ? 'inputError' : ''" />
+							<div id="mensagemDeErro" th:if="${#fields.hasErrors('logotipoFile')}">
+								<span th:errors="*{logotipoFile}"></span>
+							</div>
+							<br /><br />
 						</div>
-						<br /><br />
 						
 						<label for="categoria">Categoria de comida: </label><br>	
 						<select name="categoria" id="categoria" multiple="multiple" th:field="*{categorias}" th:classappend="${#fields.hasErrors('categorias')} ? 'inputError' : ''" style="height: 90px;">
